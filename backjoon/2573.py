@@ -1,38 +1,39 @@
 import sys, copy
 from collections import deque
+input = sys.stdin.readline
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
-input = sys.stdin.readline
-
 n, m = list(map(int, input().split()))
-
 board = [list(map(int, input().split())) for _ in range(n)]
 
 ans = 0
-print(board)
-
-for _ in range(1, 10):
+flag = False
+while 1:
+	o_check = 0
 	area = 0
 	q = deque()
 	board2 = copy.deepcopy(board)
+	# print(f"board1\n{board}\nboard2\n{board2}")
 	vis = [[False] * m for _ in range(n)]
 	for y in range(n):
 		for x in range(m):
-			if board[y][x] > 0 and not vis[y][x]:
-				print(f" y{y} x{x} / data= {board[y][x]}")
+			if board2[y][x] > 0 and not vis[y][x]:
+				# print(f" y{y} x{x} / data= {board2[y][x]}")
 				cnt = 0
 				for dir in range(4):
 					cy = y + dy[dir]
 					cx = x + dx[dir]
 					if board[cy][cx] == 0:
 						cnt += 1
-				if board2[cy][cx] - cnt <= 0:
-					board2[cy][cx] = 0
+				if board2[y][x] - cnt <= 0:
+					board2[y][x] = 0
 				else:
-					board2[cy][cx] -= cnt
+					board2[y][x] -= cnt
 				vis[y][x] = True
 				area += 1
+				if area > 1:
+					break
 				q.append((y, x))
 				while q:
 					cur = q.popleft()
@@ -45,17 +46,26 @@ for _ in range(1, 10):
 								cy = ny + dy[dir]
 								cx = nx + dx[dir]
 								if board[cy][cx] == 0:
+									# print(f"cy{cy} cx{cx}")
 									cnt += 1
-							if board2[cy][cx] - cnt <= 0:
-								board2[cy][cx] = 0
+							if board2[ny][nx] - cnt <= 0:
+								board2[ny][nx] = 0
 							else:
-								board2[cy][cx] -= cnt
+								board2[ny][nx] -= cnt
+							# print(f"x{nx} y{ny} board: {board2[ny][nx]}")
 							vis[ny][nx] = True
 							q.append((ny,nx))
+			elif board2[y][x] == 0:
+				o_check += 1
 	if area > 1:
-		print("!!!!")
+		flag = True
+		# print("!!!!")
 		break
-	print(board2)
-	board = copy.deepcopy(board2)
-
-print(ans)
+	elif o_check == n * m:
+		break
+	board = board2[:]
+	ans+=1
+if flag:
+	print(ans)
+else: 
+	print("0")

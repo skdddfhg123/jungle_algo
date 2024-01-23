@@ -16,8 +16,8 @@ def dfs(V, flag):
 K = int(input())
 for _ in range(K):
 	N, E = map(int,input().split())
-	graph = [[] for _ in range(N + 1)]
 	vis = [0] * (N + 1)
+	graph = [[] for _ in range(N + 1)]
 	for _ in range(E):
 		a, b = map(int, input().split())
 		graph[a].append(b)
